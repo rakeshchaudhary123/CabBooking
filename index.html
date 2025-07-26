@@ -239,7 +239,7 @@
       e.preventDefault();
       const feedbackData = Object.fromEntries(new FormData(this).entries());
       try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbymIb0maPNFxbuy8Wp79GxWaIWN3lh58L-DOXrGiocY-JrvogR4ElGPMxDQnmZK7vc/exec', {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbx8PcR5pngfh3RIUQP5m80YvO8Z9TpIp8HWBER7dp4n1CNU4VUcFLsy_k6xDdHi7eXc/exec', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(feedbackData)

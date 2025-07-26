@@ -41,9 +41,7 @@
       <p class="text-lg">Book your cab quickly and easily</p>
     </div>
 
-    <!-- Updated Animated Thumbnails Radio -->
-<div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-  <!-- Client Booking -->
+    <div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
   <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
     <input type="radio" name="type" value="client" hidden class="peer" checked>
     <div class="flex flex-col items-center">
@@ -52,7 +50,6 @@
     </div>
   </label>
 
-  <!-- Out Station -->
   <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
     <input type="radio" name="type" value="outstation" hidden class="peer">
     <div class="flex flex-col items-center">
@@ -61,7 +58,6 @@
     </div>
   </label>
 
-  <!-- Local -->
   <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
     <input type="radio" name="type" value="local" hidden class="peer">
     <div class="flex flex-col items-center">
@@ -71,21 +67,18 @@
   </label>
 </div>
 
-    
-
 
     <form id="bookingForm" class="space-y-4 fade show">
-</form>
+      <input type="hidden" name="sheet" id="bookingSheet" value="Bookings" />
+    </form>
     <p id="responseMsg" class="text-green-200 text-center mt-4"></p>
   </div>
   
-   <!-- Floating Contact Info -->
-  <div class="fixed top-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded-full shadow-lg z-50 text-sm md:text-base font-semibold flex items-center space-x-2">
+   <div class="fixed top-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded-full shadow-lg z-50 text-sm md:text-base font-semibold flex items-center space-x-2">
     <i class="fas fa-phone-alt"></i>
     <a href="tel:+919876543210" class="hover:underline">+91-9931442783</a>
   </div>
 
-  <!--  Feedback Form -->
   <div class="max-w-xl w-full glass rounded-3xl shadow-2xl p-8 space-y-6">
 
     <div class="space-y-4">
@@ -108,8 +101,7 @@
             <i class="fa-regular fa-star cursor-pointer" data-rating="5"></i>
           </div>
           <input type="hidden" name="rating" id="rating" required>
-          <input type="hidden" name="sheet" value="feedback" />
-        </div>
+          <input type="hidden" name="sheet" value="Feedback" /> </div>
 
         <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 rounded-lg shadow-lg transition duration-300">Submit Feedback</button>
         <p id="feedbackMsg" class="text-green-200 text-center"></p>
@@ -120,6 +112,12 @@
     const typeRadios = document.querySelectorAll('input[name="type"]');
     const form = document.getElementById('bookingForm');
     const msg = document.getElementById('responseMsg');
+
+    // **IMPORTANT**: Replace with your deployed Google Apps Script URL for the main booking form
+    const GOOGLE_APPS_SCRIPT_URL_BOOKING = "YOUR_GOOGLE_APPS_SCRIPT_URL_FOR_BOOKING_FORM"; 
+    // **IMPORTANT**: Replace with your deployed Google Apps Script URL for the feedback form
+    const GOOGLE_APPS_SCRIPT_URL_FEEDBACK = "https://script.google.com/macros/s/AKfycbx8PcR5pngfh3RIUQP5m80YvO8Z9TpIp8HWBER7dp4n1CNU4VUcFLsy_k6xDdHi7eXc/exec";
+
 
     const formConfigs = {
       client: [
@@ -151,6 +149,14 @@
       form.classList.remove('show');
       setTimeout(() => {
         form.innerHTML = '';
+        // Add the hidden input for the sheet name for the booking form
+        const sheetInput = document.createElement('input');
+        sheetInput.type = 'hidden';
+        sheetInput.name = 'sheet';
+        sheetInput.value = 'Bookings'; // This will send 'Bookings' as the sheet name
+        form.appendChild(sheetInput);
+
+
         formConfigs[type].forEach(field => {
           const wrapper = document.createElement('div');
           wrapper.className = 'relative';
@@ -203,9 +209,12 @@
 
       const data = Object.fromEntries(new FormData(form).entries());
       data.type = document.querySelector('input[name="type"]:checked').value;
+      // Ensure the 'sheet' value from the hidden input is included
+      data.sheet = document.getElementById('bookingSheet').value;
+
 
       try {
-        const response = await fetch("YOUR_GOOGLE_APPS_SCRIPT_URL", {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL_BOOKING, { // Use the booking URL
           method: "POST",
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify(data)
@@ -239,13 +248,20 @@
       e.preventDefault();
       const feedbackData = Object.fromEntries(new FormData(this).entries());
       try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbx8PcR5pngfh3RIUQP5m80YvO8Z9TpIp8HWBER7dp4n1CNU4VUcFLsy_k6xDdHi7eXc/exec', {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbzoc2JKjMcsKW7Y2AprcFRXvBc9lIWQXzLkJYi0P__6XO2eudg5EgR0Y4_apdzjOw/exec', { // Use the feedback URL
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(feedbackData)
         });
         document.getElementById('feedbackMsg').innerText = res.ok ? '✅ Thank you for your feedback!' : '❌ Failed to submit feedback';
-        if (res.ok) this.reset();
+        if (res.ok) {
+          this.reset();
+          // Reset stars to empty after successful submission
+          document.querySelectorAll('#stars i').forEach(s => {
+            s.className = 'fa-regular fa-star';
+          });
+          document.getElementById('rating').value = ''; // Clear the hidden rating input
+        }
       } catch (e) {
         document.getElementById('feedbackMsg').innerText = '❌ Network error while submitting feedback';
       }

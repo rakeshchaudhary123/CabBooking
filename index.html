@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Travel Animus Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1650&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .glass {
+      backdrop-filter: blur(16px);
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    label {
+      font-weight: 500;
+    }
+    .fade {
+      transition: all 0.5s ease;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .fade.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start px-4 py-8 text-white space-y-12">
+
+  <div class="max-w-2xl w-full glass rounded-3xl shadow-2xl p-8">
+    <div class="text-center mb-6">
+      <h1 class="text-4xl font-bold text-yellow-300 mb-2">🚖 Travel Animus</h1>
+      <p class="text-lg">Book your cab quickly and easily</p>
+    </div>
+
+    <!-- Updated Animated Thumbnails Radio -->
+<div class="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+  <!-- Client Booking -->
+  <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
+    <input type="radio" name="type" value="client" hidden class="peer" checked>
+    <div class="flex flex-col items-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/3068/3068309.png" alt="Client Booking" class="w-12 h-12 mb-2 opacity-90">
+      <span class="peer-checked:text-yellow-300 text-lg font-semibold">Client Booking</span>
+    </div>
+  </label>
+
+  <!-- Out Station -->
+  <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
+    <input type="radio" name="type" value="outstation" hidden class="peer">
+    <div class="flex flex-col items-center">
+      <img src="https://static.thenounproject.com/png/3011886-512.png" alt="Out Station" class="w-12 h-12 mb-2 opacity-90">
+      <span class="peer-checked:text-yellow-300 text-lg font-semibold">Out Station</span>
+    </div>
+  </label>
+
+  <!-- Local -->
+  <label class="cursor-pointer w-full text-center py-4 px-3 rounded-xl border-white border-2 transition transform hover:scale-105 peer-checked:scale-110 shadow-md hover:shadow-lg bg-white bg-opacity-10 backdrop-blur-md text-white">
+    <input type="radio" name="type" value="local" hidden class="peer">
+    <div class="flex flex-col items-center">
+      <img src="https://cdn-icons-png.flaticon.com/512/2622/2622791.png" alt="Local Booking" class="w-12 h-12 mb-2 opacity-90">
+      <span class="peer-checked:text-yellow-300 text-lg font-semibold">Local</span>
+    </div>
+  </label>
+</div>
+
+    
+
+
+    <form id="bookingForm" class="space-y-4 fade show">
+</form>
+    <p id="responseMsg" class="text-green-200 text-center mt-4"></p>
+  </div>
+  
+   <!-- Floating Contact Info -->
+  <div class="fixed top-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded-full shadow-lg z-50 text-sm md:text-base font-semibold flex items-center space-x-2">
+    <i class="fas fa-phone-alt"></i>
+    <a href="tel:+919876543210" class="hover:underline">+91-9931442783</a>
+  </div>
+
+  <!--  Feedback Form -->
+  <div class="max-w-xl w-full glass rounded-3xl shadow-2xl p-8 space-y-6">
+
+    <div class="space-y-4">
+      <h3 class="text-xl font-semibold text-yellow-300">📝 Feedback</h3>
+      <form id="feedbackForm" class="space-y-4">
+        <input type="text" name="name" placeholder="Name (Optional)" class="w-full px-4 py-2 rounded-lg bg-white/90 text-black placeholder-gray-600">
+        <input type="tel" name="mobile" placeholder="Mobile (Optional)" pattern="^[6-9]\d{9}$" title="Must start with 6/7/8/9 and be 10 digits" class="w-full px-4 py-2 rounded-lg bg-white/90 text-black placeholder-gray-600">
+        <textarea name="feedback" required placeholder="Your feedback" class="w-full px-4 py-2 rounded-lg bg-white/90 text-black placeholder-gray-600"></textarea>
+
+        <div class="flex space-x-1 text-yellow-400">
+          <label class="text-white">Rating:</label>
+          <template id="star-template">
+            <i class="fa fa-star cursor-pointer"></i>
+          </template>
+          <div id="stars">
+            <i class="fa-regular fa-star cursor-pointer" data-rating="1"></i>
+            <i class="fa-regular fa-star cursor-pointer" data-rating="2"></i>
+            <i class="fa-regular fa-star cursor-pointer" data-rating="3"></i>
+            <i class="fa-regular fa-star cursor-pointer" data-rating="4"></i>
+            <i class="fa-regular fa-star cursor-pointer" data-rating="5"></i>
+          </div>
+          <input type="hidden" name="rating" id="rating" required>
+          <input type="hidden" name="sheet" value="feedback" />
+        </div>
+
+        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 rounded-lg shadow-lg transition duration-300">Submit Feedback</button>
+        <p id="feedbackMsg" class="text-green-200 text-center"></p>
+    </div>
+  </div>
+
+  <script>
+    const typeRadios = document.querySelectorAll('input[name="type"]');
+    const form = document.getElementById('bookingForm');
+    const msg = document.getElementById('responseMsg');
+
+    const formConfigs = {
+      client: [
+        {name: 'company', placeholder: 'Company Name', type:'text', icon: 'fa-building'},
+        {name: 'employee', placeholder: 'Employee Name', type:'text', icon: 'fa-user'},
+        {name: 'destination', placeholder: 'Destination', type:'text', icon: 'fa-map-marker-alt'},
+        {name: 'date', placeholder: 'Date of Travel', type:'date'},
+        {name: 'time', placeholder: 'Time', type:'time'},
+        {name: 'days', placeholder: 'No Of Days', type:'number'},
+        {name: 'email', placeholder: 'Email', type:'email', icon: 'fa-envelope'},
+        {name: 'mobile', placeholder: 'Mobile Number', type:'tel', icon: 'fa-phone'},
+      ],
+      outstation: [
+        {name: 'name', placeholder: 'Name', type:'text', icon: 'fa-user'},
+        {name: 'mobile', placeholder: 'Mobile Number', type:'tel', icon: 'fa-phone'},
+        {name: 'destination', placeholder: 'Destination', type:'text', icon: 'fa-map-marker-alt'},
+        {name: 'time', placeholder: 'Time', type:'time'},
+        {name: 'days', placeholder: 'No Of Days', type:'number'},
+      ],
+      local: [
+        {name: 'name', placeholder: 'Name', type:'text', icon: 'fa-user'},
+        {name: 'mobile', placeholder: 'Mobile', type:'tel', icon: 'fa-phone'},
+        {name: 'location', placeholder: 'Location', type:'text', icon: 'fa-map-marker-alt'},
+        {name: 'time', placeholder: 'Time', type:'time'},
+      ]
+    };
+
+    function renderFields(type) {
+      form.classList.remove('show');
+      setTimeout(() => {
+        form.innerHTML = '';
+        formConfigs[type].forEach(field => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'relative';
+
+          if (field.icon) {
+            const icon = document.createElement('i');
+            icon.className = `fa ${field.icon} absolute left-3 top-3.5 text-gray-500`;
+            wrapper.appendChild(icon);
+          }
+
+          const input = document.createElement('input');
+          input.name = field.name;
+          input.type = field.type;
+          input.placeholder = field.placeholder;
+          input.required = true;
+          input.className = `w-full px-10 py-2 rounded-lg bg-white/90 text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400`;
+
+          if (field.name === 'mobile') {
+            input.pattern = '^[6-9]\\d{9}$';
+            input.title = 'Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9';
+          }
+          if (field.type === 'email') {
+            input.pattern = "^[^\s@]+@[^\s@]+\\.[^\s@]+$";
+            input.title = 'Enter a valid email address';
+          }
+
+          wrapper.appendChild(input);
+          form.appendChild(wrapper);
+        });
+
+        const btn = document.createElement('button');
+        btn.type = 'submit';
+        btn.textContent = 'Submit Booking';
+        btn.className = "w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 rounded-lg shadow-lg transition duration-300";
+        form.appendChild(btn);
+
+        form.classList.add('show');
+      }, 300);
+    }
+
+    typeRadios.forEach(r => r.addEventListener('change', () => renderFields(r.value)));
+    renderFields('client');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.type = document.querySelector('input[name="type"]:checked').value;
+
+      try {
+        const response = await fetch("YOUR_GOOGLE_APPS_SCRIPT_URL", {
+          method: "POST",
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          msg.innerText = "✅ Booking submitted successfully!";
+          form.reset();
+          renderFields(data.type);
+        } else {
+          msg.innerText = "❌ Submission failed. Try again.";
+        }
+      } catch (err) {
+        msg.innerText = "❌ Network error occurred.";
+      }
+    });
+
+    // Feedback form star rating logic
+    document.querySelectorAll('#stars i').forEach(star => {
+      star.addEventListener('click', function () {
+        const rating = this.dataset.rating;
+        document.getElementById('rating').value = rating;
+        document.querySelectorAll('#stars i').forEach((s, i) => {
+          s.className = i < rating ? 'fa fa-star text-yellow-400' : 'fa-regular fa-star';
+        });
+      });
+    });
+
+    // Feedback form submit
+    document.getElementById('feedbackForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const feedbackData = Object.fromEntries(new FormData(this).entries());
+      try {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbxOZ_fz158O-N-O0jt8qNdzqomwbvI0LO2a_Yt6f976QmXBLaTSXb6Oqb46X9dAe6Hw/exec', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(feedbackData)
+        });
+        document.getElementById('feedbackMsg').innerText = res.ok ? '✅ Thank you for your feedback!' : '❌ Failed to submit feedback';
+        if (res.ok) this.reset();
+      } catch (e) {
+        document.getElementById('feedbackMsg').innerText = '❌ Network error while submitting feedback';
+      }
+    });
+  </script>
+</body>
+</html>

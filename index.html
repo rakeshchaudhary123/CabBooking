@@ -248,7 +248,7 @@
       e.preventDefault();
       const feedbackData = Object.fromEntries(new FormData(this).entries());
       try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbzoc2JKjMcsKW7Y2AprcFRXvBc9lIWQXzLkJYi0P__6XO2eudg5EgR0Y4_apdzjOw/exec', { // Use the feedback URL
+        const res = await fetch('https://script.google.com/macros/s/AKfycbw15KMQ7dlkPSFEkqzKFXpJb9ZzdiPvfl9zZ1iJSWGdyWA_yo1ttVI_KIZg9o90E1EK/exec', { // Use the feedback URL
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(feedbackData)
